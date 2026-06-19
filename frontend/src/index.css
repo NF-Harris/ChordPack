@@ -1,0 +1,377 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+body {
+  margin: 0;
+}
+
+.search-container {
+  width: 100%;
+  /* background-color: #008bf8; */
+
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.search {
+  border: 2px solid transparent;
+  width: 100%;            /* <--- Occupe l'espace disponible */
+  max-width: 15em;        /* <--- Reste ta limite haute sur grand écran */
+  flex: 1 1 auto;         /* <--- Raccourci pour flex-grow: 1, flex-shrink: 1 */
+  height: 2.2em;           /* On augmente la hauteur (1.5em était trop petit) */
+  padding: 0 0.8em;        /* On centre le texte verticalement avec un padding propre */
+  box-sizing: border-box;  /* INDISPENSABLE : force le padding à rester à l'intérieur des 2.2em */
+  outline: none;
+  overflow: hidden;
+  /* background-color: #F3F3F3; */
+  gap: 3em;
+  border-radius: 10px;
+  transition: all 0.5s;
+}
+
+.search:hover,
+.search:focus {
+  border: 2px solid #4A9DEC;
+  box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
+  /* background-color: white; */
+}
+
+/* CSS Layout */
+.layout {
+  /* width: 100%;
+  display: grid;
+  /* minmax(280px, 1fr) permet aux colonnes de s'adapter sans déborder 
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  row-gap: 30px;
+  column-gap: 30px;
+  list-style: none; 
+  justify-content: space-evenly; */
+
+  width: 100%;
+
+  display: flex;
+  row-gap: 30px;
+  column-gap: 20px;
+  flex-wrap: wrap;
+
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.column-layout {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  justify-content: space-around;
+  align-items: center;
+}
+
+.button-layout {
+  width: 100%;
+
+  display: flex;
+  gap: 60px;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */ 
+.card {
+ width: 100%;
+ max-width: 120px;
+ height: 100px;
+ border-radius: 20px;
+ background: #f5f5f5;
+ position: relative; 
+ padding: 1.8rem;
+ border: 2px solid #c3c6ce;
+ transition: 0.5s ease-out;
+ overflow: visible;
+ /* On force la carte à centrer verticalement et horizontalement son contenu */
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+.card-details {
+ color: black;
+ /* height: 100%; */
+ gap: .3em;
+}
+
+.card-button {
+ transform: translate(-50%, 125%);
+ width: 50%;
+ border-radius: 1rem;
+ border: none;
+ background-color: #008bf8;
+ color: #fff;
+ font-size: o.8rem;
+ padding: .3rem 1rem;
+ position: absolute;
+ left: 50%;
+ bottom: 0;
+ opacity: 0;
+ transition: 0.3s ease-out;
+}
+
+.text-body {
+font-size: 0.8em;
+color: rgb(134, 134, 134);
+}
+
+/*Text*/
+.text-title {
+ font-size: 1.1em;
+ font-weight: bold;
+}
+
+/*Hover*/
+.card:hover {
+ border-color: #008bf8;
+ box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+}
+
+.card:hover .card-button {
+ transform: translate(-50%, 50%);
+ opacity: 1;
+}
+
+
+.chord {
+ width: 100%;
+ max-width: 1000px;
+ height: 100%;
+ border-radius: 20px;
+ background: #f5f5f5;
+ position: relative; 
+ padding: 1.8rem;
+ border: 2px solid #c3c6ce;
+ transition: 0.5s ease-out;
+ overflow: visible;
+ /* On force la carte à centrer verticalement et horizontalement son contenu */
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+.chord-details {
+ color: black;
+ /* height: 100%; */
+ gap: .3em;
+}
+
+.chord-button {
+ transform: translate(-50%, 125%);
+ width: 50%;
+ border-radius: 1rem;
+ border: none;
+ background-color: #008bf8;
+ color: #fff;
+ font-size: 0.8rem;
+ padding: .3rem 1rem;
+ position: absolute;
+ left: 50%;
+ bottom: 0;
+ opacity: 0;
+ transition: 0.3s ease-out;
+}
+
+.no-chord {
+  width: 400px;
+  padding-right: 10px;
+  height: fit-content;
+  padding-bottom: 12px;
+  background: lightgrey;
+  border-left-style: solid;
+  border-left-color: lightblue;
+  border-left-width: 5px;
+  border-radius: 15px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  background: linear-gradient(to right, #add8e66e, #add8e64e 50%, #add8e63e);
+}
+
+.no-chord svg {
+  height: 40px;
+  padding-left: 10px;
+  padding-top: 12px;
+  fill: lightblue;
+  float: left;
+}
+
+.no-chord p {
+  float: left;
+  padding-top: 13px;
+  padding-left: 10px;
+  color: white;
+  font-size: 15px;
+}
+
+.no-chord span {
+  display: flex;
+  align-items: left;
+}
+
+
+/* From Uiverse.io by vinodjangid07 */ 
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: rgb(255, 65, 65);
+}
+
+/* plus sign */
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 17px;
+}
+
+.sign svg path {
+  fill: white;
+}
+/* text */
+.text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.Btn:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+}
+
+.Btn:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
+}
+/* hover effect button's text */
+.Btn:hover .text {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-right: 10px;
+}
+/* button click effect*/
+.Btn:active {
+  transform: translate(2px ,2px);
+}
+
+.Btn-container {
+  width: 150px;
+
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  justify-content: center;
+}
+
+
+
+.btn-red {
+width: 105px;
+border-radius: 1rem;
+border: none;
+background-color: rgb(255, 65, 65);
+color: #fff;
+font-size: 0.9rem;
+padding: .3rem 1rem;
+}
+
+.btn-blue {
+width: 90px;
+border-radius: 1rem;
+border: none;
+background-color: #008bf8;
+color: #fff;
+font-size: 0.9rem;
+padding: .3rem 1rem;
+}

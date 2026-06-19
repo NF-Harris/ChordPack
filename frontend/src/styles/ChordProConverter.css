@@ -1,0 +1,39 @@
+/* --- LE FORMAT DE VOTRE PHOTO CORRIGÉ FINAL --- */
+
+.song-sheet {
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem; /* Un peu d'espace vertical pour accueillir les accords */
+}
+
+.blank-line {
+  height: 1.5em;
+}
+
+/* Une ligne complète */
+.lyrics-line {
+  position: relative;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+/* On repasse l'accord en width 0 pour qu'il ne pousse plus les lettres du mot */
+.chords {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  vertical-align: bottom;
+}
+
+/* L'accord se dessine au-dessus sans toucher à l'espace du texte en dessous */
+.chords::before {
+  content: attr(data-display-chords);
+  position: absolute;
+  bottom: 1.3em; /* Ajuste cette valeur pour monter/descendre l'accord par rapport au mot */
+  left: 0;
+  font-weight: bold;
+  color: #ff8700;
+  font-size: 0.9em;
+  white-space: nowrap;
+}
