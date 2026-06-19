@@ -11,3 +11,4 @@ python-dotenv
 beautifulsoup4
 requests
 django-filter
+gunicorn
