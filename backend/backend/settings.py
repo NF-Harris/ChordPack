@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 raw_db_url = os.environ.get('SECRET_KEY_DB') or ""
 
 # --- CRASH DE DEBUG SÉCURISÉ POUR LOGS ---
-raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
+# raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
 # ----------------------------------------
 
 DATABASES = {
