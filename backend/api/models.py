@@ -16,7 +16,7 @@ class Chord(models.Model):
     is_public = models.BooleanField(default=True) 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True) # Null pour les morceaux publics
     created_at = models.DateTimeField(auto_now_add=True)
-    embedding = VectorField(dimensions=1536, null=True, blank=True)
+    embedding = VectorField(dimensions=768, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # 1. On vérifie si c'est une création ou si un champ textuel a changé

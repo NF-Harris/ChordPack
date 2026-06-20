@@ -14,4 +14,4 @@ django-filter
 gunicorn
 dj-database-url
 pgvector 
-openai
+google-generativeai
