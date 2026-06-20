@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import NoteListCreate, NoteDelete,PublicChordDetail,PublicChordList,UserChordDetailUpdateDestroy,UserChordListCreate, VectorSearchSongView
+from .views import NoteListCreate, NoteDelete,PublicChordDetail,PublicChordList,UserChordDetailUpdateDestroy,UserChordListCreate, VectorSearchChordView
 
 urlpatterns = [
     path("notes/", NoteListCreate.as_view(), name="Note"),
@@ -8,5 +8,5 @@ urlpatterns = [
     path("chords/public/details/<int:pk>/", PublicChordDetail.as_view(), name="Public_Chord_Detail"),
     path("chords/user/", UserChordListCreate.as_view(), name="User_Chord"),
     path("chords/user/update/<int:pk>/", UserChordDetailUpdateDestroy.as_view(),name="Chord_Update"),
-    path('api/songs/search-vector/', VectorSearchSongView.as_view(), name='search-vector-songs'),
+    path('api/songs/search-vector/', VectorSearchChordView.as_view(), name='search-vector-songs'),
 ]

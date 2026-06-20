@@ -9,8 +9,9 @@ from rest_framework.pagination import PageNumberPagination
 from pgvector.django import CosineDistance 
 from rest_framework.response import Response
 from rest_framework import status
-from utils import generate_song_embedding
+from .utils import generate_song_embedding
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.views import APIView
 
 from dotenv import load_dotenv
 import os
@@ -108,7 +109,7 @@ class UserChordDetailUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 
 
-class VectorSearchChordView(generics.APIView):
+class VectorSearchChordView(APIView):
     """
     Endpoint appelé par n8n envoyant une chaîne de caractères brute 'query_text'.
     """
