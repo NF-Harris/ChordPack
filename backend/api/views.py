@@ -6,6 +6,23 @@ from .serializers import UserSerializer, NoteSerializer, ChordSerializer
 from .models import Note, Chord
 from .filters import ProductFilter
 from rest_framework.pagination import PageNumberPagination
+from pgvector.django import CosineDistance 
+from rest_framework.response import Response
+from rest_framework import status
+from utils import generate_song_embedding
+from rest_framework.exceptions import AuthenticationFailed
+
+from dotenv import load_dotenv
+import os
+import dj_database_url
+from pathlib import Path
+
+load_dotenv
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Charge le fichier .env qui se trouve à la racine de ton projet backend
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Create your views here.
 
@@ -87,3 +104,46 @@ class UserChordDetailUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Chord.objects.filter(user=self.request.user)
+
+
+
+
+class VectorSearchChordView(generics.APIView):
+    """
+    Endpoint appelé par n8n envoyant une chaîne de caractères brute 'query_text'.
+    """
+    def post(self, request, *args, **kwargs):
+        # 1. Sécurité : Vérification de la clé API
+        token = request.headers.get('X-API-Key')
+        if token != os.environ.get('X-API-Key'):
+            raise AuthenticationFailed("Accès non autorisé.")
+
+        # 2. Récupération du texte de recherche envoyé par n8n
+        query_text = request.data.get('query_text')
+        if not query_text:
+            return Response({"error": "Le champ 'query_text' est requis."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # 3. Génération de l'embedding de la question de l'utilisateur
+        try:
+            query_embedding = generate_song_embedding(query_text)
+        except Exception as e:
+            return Response({"error": f"Erreur lors de la génération de l'embedding OpenAI : {e}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # 4. Recherche par similarité cosinus avec pgvector
+        # On ne prend que les morceaux qui ont un embedding et on garde les 5 plus proches
+        results = Chord.objects.filter(embedding__isnull=False).annotate(
+            distance=CosineDistance('embedding', query_embedding)
+        ).order_by('distance')[:5]
+        
+        # 5. Structuration de la réponse JSON pour n8n
+        data = []
+        for chord in results:
+            data.append({
+                "id": chord.id,
+                "title": chord.title,
+                "artist": chord.artist or "Artiste inconnu",
+                "content": chord.content, # Ton format ChordPro
+                "score": round(1 - chord.distance, 4) # Plus proche de 1 = meilleure correspondance
+            })
+            
+        return Response(data, status=status.HTTP_200_OK)

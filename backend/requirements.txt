@@ -13,3 +13,5 @@ requests
 django-filter
 gunicorn
 dj-database-url
+pgvector 
+openai
