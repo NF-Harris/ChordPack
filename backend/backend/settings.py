@@ -14,10 +14,14 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+import dj_database_url
 
 load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Charge le fichier .env qui se trouve à la racine de ton projet backend
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -89,6 +93,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+# 1. On récupère la valeur brute
+raw_db_url = os.environ.get('SECRET_KEY_DB') 
+
+# 2. Sécurité : Si Windows ou la bibliothèque a injecté un format "bytes" sous forme de texte b'...'
+if raw_db_url.startswith("b'") or raw_db_url.startswith('b"'):
+    # On retire le b' au début et le ' à la fin pour récupérer la vraie URL
+    raw_db_url = raw_db_url[2:-1]
+
+if raw_db_url.startswith("postgresql://"):
+    raw_db_url = raw_db_url.replace("postgresql://", "postgres://", 1)
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
@@ -100,6 +114,17 @@ DATABASES = {
     }
 }
 
+try:
+    DATABASES ["default"] = dj_database_url.parse(raw_db_url)
+    # Un petit indicateur visuel pour confirmer que PostgreSQL est chargé
+    print("💡 [Database] Connexion PostgreSQL configurée avec succès.")
+except Exception as e:
+    print("\n" + "❌" * 30)
+    print("ERREUR DE CONFIGURATION DE LA BASE DE DONNÉES !")
+    print(f"URL tentée : '{raw_db_url}'")
+    print(f"Détail de l'erreur : {e}")
+    print("🔄 Bascule automatique sur SQLite locale pour éviter le crash.")
+    print("❌" * 30 + "\n")
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

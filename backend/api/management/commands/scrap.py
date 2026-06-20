@@ -63,7 +63,8 @@ def acousticGasySerializer(soup):
             ligne_actuelle = lignes[i]
 
             ignore = False
-            ignoreList = ["Chorus","Verse","Intro", "Tondrompeon","Tonony","Fiverenana","Key","Tonalite"]
+            ignoreList = ["Chorus","Verse","Intro", "Tondrompeon","Tonony"
+                          ,"Fiverenana","Key","Tonalite","Fampidirana","Hiran", "Famaranana", "Tetezana","Bridge"]
             for ing in ignoreList:
                 if ing in ligne_actuelle:
                     ignore = True
