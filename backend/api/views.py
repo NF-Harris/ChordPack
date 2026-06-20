@@ -116,8 +116,8 @@ class VectorSearchChordView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         # 1. Sécurité : Vérification de la clé API
-        token = request.headers.get('X-API-Key')
-        if token != os.environ.get('X-API-Key'):
+        token = request.headers.get('X_API_Key')
+        if token != os.environ.get('X_API_Key'):
             raise AuthenticationFailed("Accès non autorisé.")
 
         # 2. Récupération du texte de recherche envoyé par n8n
