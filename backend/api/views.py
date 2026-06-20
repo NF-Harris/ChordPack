@@ -118,6 +118,7 @@ class VectorSearchChordView(APIView):
         # 1. Sécurité : Vérification de la clé API
         token = request.headers.get('X_API_Key')
         if token != os.environ.get('X_API_Key'):
+            print(f"DEBUG AUTH - Token reçu: '{token}' | Attendu: '{os.environ.get('X_API_Key')}'")
             raise AuthenticationFailed("Accès non autorisé.")
 
         # 2. Récupération du texte de recherche envoyé par n8n
