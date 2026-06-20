@@ -96,13 +96,19 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+raw_db_url = os.environ.get('SECRET_KEY_DB') or ""
+
+# --- CRASH DE DEBUG SÉCURISÉ POUR LOGS ---
+raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
+# ----------------------------------------
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES ["default"] = dj_database_url.parse(os.environ.get("SECRET_KEY_DB"))
+DATABASES ["default"] = dj_database_url.parse(os.environ.get("raw_db_url"))
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
