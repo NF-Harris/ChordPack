@@ -98,9 +98,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 raw_db_url = os.environ.get('SECRET_KEY_DB') or ""
 
-# --- CRASH DE DEBUG SÉCURISÉ POUR LOGS ---
-# raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
-# ----------------------------------------
 
 # 1. Nettoyage initial des espaces et des guillemets/quotes externes
 raw_db_url = raw_db_url.strip().strip('\'"')
@@ -111,6 +108,10 @@ if raw_db_url.startswith("b'") or raw_db_url.startswith('b"'):
 
 # 3. Deuxième passe de nettoyage au cas où les guillemets étaient à l'intérieur du b'
 raw_db_url = raw_db_url.strip('\'"')
+
+# --- CRASH DE DEBUG SÉCURISÉ POUR LOGS ---
+# raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
+# ----------------------------------------
 
 DATABASES = {
     'default': {
