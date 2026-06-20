@@ -110,7 +110,7 @@ if raw_db_url.startswith("b'") or raw_db_url.startswith('b"'):
 raw_db_url = raw_db_url.strip('\'"')
 
 # --- CRASH DE DEBUG SÉCURISÉ POUR LOGS ---
-raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
+# raise Exception(f"DEBUG RENDER -> DATABASE_URL trouvee: '{raw_db_url}'")
 # ----------------------------------------
 
 DATABASES = {
