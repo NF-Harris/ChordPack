@@ -113,6 +113,7 @@ class VectorSearchChordView(APIView):
     """
     Endpoint appelé par n8n envoyant une chaîne de caractères brute 'query_text'.
     """
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         # 1. Sécurité : Vérification de la clé API
         token = request.headers.get('X-API-Key')
