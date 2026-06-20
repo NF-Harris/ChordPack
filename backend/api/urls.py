@@ -8,5 +8,5 @@ urlpatterns = [
     path("chords/public/details/<int:pk>/", PublicChordDetail.as_view(), name="Public_Chord_Detail"),
     path("chords/user/", UserChordListCreate.as_view(), name="User_Chord"),
     path("chords/user/update/<int:pk>/", UserChordDetailUpdateDestroy.as_view(),name="Chord_Update"),
-    path('api/songs/search-vector/', VectorSearchChordView.as_view(), name='search-vector-songs'),
+    path('chords/search-vector/', VectorSearchChordView.as_view(), name='search-vector-chords'),
 ]
