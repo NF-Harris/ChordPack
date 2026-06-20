@@ -12,3 +12,4 @@ beautifulsoup4
 requests
 django-filter
 gunicorn
+dj-database-url
