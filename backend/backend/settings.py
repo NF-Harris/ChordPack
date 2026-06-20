@@ -119,7 +119,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-DATABASES ["default"] = dj_database_url.parse(os.environ.get(raw_db_url))
+DATABASES ["default"] = dj_database_url.parse(raw_db_url)
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
