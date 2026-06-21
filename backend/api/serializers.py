@@ -22,6 +22,6 @@ class NoteSerializer(serializers.ModelSerializer):
 class ChordSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chord
-        fields = ["id", "title","artist", "content","is_public", "user","created_at"]
+        fields = ["id", "title","artist", "content","is_public","verified","user","created_at"]
         extra_kwargs = {"user": {"read_only": True}}
         

@@ -12,6 +12,17 @@ from rest_framework import status
 from .utils import generate_song_embedding
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.views import APIView
+from django.http import JsonResponse
+from django.views import View
+from django.shortcuts import get_object_or_404
+from asgiref.sync import async_to_sync
+from django.utils.decorators import classonlymethod
+from asgiref.sync import sync_to_async,async_to_sync
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
+from .models import Chord
+from .utils import clean_chordpro_format
 
 from dotenv import load_dotenv
 import os
@@ -112,6 +123,7 @@ class VectorSearchChordView(APIView):
     """
     Endpoint appelé par n8n envoyant une chaîne de caractères brute 'query_text'.
     """
+
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         # 1. Sécurité : Vérification de la clé API
@@ -149,3 +161,74 @@ class VectorSearchChordView(APIView):
             })
             
         return Response(data, status=status.HTTP_200_OK)
+
+
+# =======================================================
+# 3. Helpers pour l'accès asynchrone à la base de données
+# =======================================================
+# Django requiert que les opérations ORM soient exécutées dans un thread synchrone
+@sync_to_async
+def get_chord_or_none(pk):
+    """Récupère l'accord en base de données de manière sécurisée."""
+    try:
+        # On s'assure que l'accord appartient bien à l'utilisateur connecté
+        return Chord.objects.get(pk=pk)
+    except Chord.DoesNotExist:
+        return None
+
+@sync_to_async
+def save_chord_content(chord, new_content):
+    """Sauvegarde le nouveau contenu nettoyé de l'accord."""
+    chord.content = new_content
+    chord.verified = True
+    chord.save()
+    return chord
+
+
+# =======================================================
+# 4. Vue Asynchrone pour la rectification
+# =======================================================
+class RectifyChordView(APIView):
+    """
+    Vue synchrone classique exécutant le nettoyage de manière sécurisée.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, pk, *args, **kwargs):
+        # 1. Récupération du morceau
+        chord = get_object_or_404(Chord, pk=pk)
+        
+        raw_content = chord.content
+        if not raw_content:
+            return Response(
+                {"error": "Le contenu de la chanson est vide."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            # 2. Appel synchrone direct, plus de conflits de boucles !
+            cleaned_content = clean_chordpro_format(raw_content)
+        except Exception as e:
+            return Response(
+                {"error": f"Erreur lors du traitement par l'IA : {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+                
+        if not cleaned_content:
+            return Response(
+                {"error": "Le nettoyage a échoué. L'IA n'a retourné aucun contenu ou le quota est dépassé."}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            
+        if cleaned_content.strip() == raw_content.strip():
+            chord.verified = True
+            chord.save()
+            return Response(ChordSerializer(chord).data, status=status.HTTP_200_OK)
+        
+        # 3. Sauvegarde
+        chord.content = cleaned_content
+        chord.verified = True
+        chord.save()
+        
+        return Response(ChordSerializer(chord).data, status=status.HTTP_200_OK)

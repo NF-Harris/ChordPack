@@ -40,11 +40,21 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES":["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    'EXCEPTION_HANDLER': 'backend.exceptions.custom_exception_handler',
+    # Si tu utilises le throttling natif, assure-t-il d'être là :
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day',
+    }
 }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME" : timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME" : timedelta(days=30),
+    "REFRESH_TOKEN_LIFETIME" : timedelta(days=3),
 }
 
 # Application definition

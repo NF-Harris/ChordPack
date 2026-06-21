@@ -33,6 +33,11 @@ function Home(){
     const [nextPage,setNextPage] = useState("")
     const [prevPage,setPrevPage] = useState("")
     const [goNext, setGoNext] = useState(false)
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+    
+
+     
 
     const navigate = useNavigate()
     
@@ -92,6 +97,31 @@ function Home(){
                 }
         }
     }
+    const rectify = async (id)=>{
+        setLoading(true);
+        setError(null);
+
+        try{
+            const res = await api.post(`api/chords/rectify/${id}/`)
+            setChordDetail(res.data)
+
+        }catch (err) {
+      if (err.response && err.response.status === 429) {
+        // On récupère les données structurées par notre backend Django
+        const { message, wait_seconds } = err.response.data;
+        
+        let friendlyMessage = message;
+        if (wait_seconds) {
+          friendlyMessage += ` Veuillez réessayer dans ${Math.ceil(wait_seconds / 60)} minute(s).`;
+        }
+        
+        setError(friendlyMessage);
+      } else {
+        setError("Une erreur inattendue est survenue.");
+      }
+    } finally {
+      setLoading(false);
+    }}
                 
     const deleteChord = async (id)=>{
         try{
@@ -251,7 +281,7 @@ function Home(){
                 </div>
             </section> :
             <div className="column-layout">
-                <section>{seeDetail ? <ChordCard song={chordDetail} navigate={setSeeDetail} chordProText={chordProText} setChordProText={setChordProText}/> :
+                <section>{seeDetail ? <ChordCard song={chordDetail} loading={loading} rectify={rectify} navigate={setSeeDetail} chordProText={chordProText} setChordProText={setChordProText}/> :
                     <ul className="layout">{chords.map((chord)=> (<SongCard song={chord} key={chord.id} navigate={setSeeDetail} setChordsDetail={setChordDetail}/>))}
                     </ul>}
                 </section>
